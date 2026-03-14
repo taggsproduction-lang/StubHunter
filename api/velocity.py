@@ -60,43 +60,24 @@ class handler(BaseHTTPRequestHandler):
                         result["sales_per_hour"] = round(len(times) / span, 1)
 
                 if parsed:
-                    prices = sorted([x["price"] for x in parsed])
+                    # Group ALL completed orders by distinct price level
+                    all_counts = {}
+                    for x in parsed:
+                        all_counts[x["price"]] = all_counts.get(x["price"], 0) + 1
 
-                    # Find the midpoint to split sell-side vs buy-side
-                    # Transactions near the low end = sell now fills
-                    # Transactions near the high end = buy now fills
-                    if best_buy and best_sell and best_buy > 0 and best_sell > 0:
-                        midpoint = (best_buy + best_sell) / 2
-                    else:
-                        midpoint = (prices[0] + prices[-1]) / 2
+                    # Sort all distinct prices descending (most expensive first)
+                    all_sorted = sorted(all_counts.items(), reverse=True)
 
-                    sell_prices = [p for p in prices if p <= midpoint]
-                    buy_prices = [p for p in prices if p > midpoint]
-
-                    # If split is too lopsided, just take bottom/top halves
-                    if not sell_prices or not buy_prices:
-                        half = len(prices) // 2
-                        sell_prices = prices[:half] if half > 0 else prices[:1]
-                        buy_prices = prices[half:] if half < len(prices) else prices[-1:]
-
-                    # --- Sell side depth: 10 lowest DISTINCT price levels with qty ---
-                    sell_counts = {}
-                    for p in sell_prices:
-                        sell_counts[p] = sell_counts.get(p, 0) + 1
-                    sell_sorted = sorted(sell_counts.items())  # ascending
-                    sell_10 = sell_sorted[:10]
+                    # Sell side = 10 highest distinct price levels (sell orders / buy-now fills)
+                    sell_10 = all_sorted[:10]
                     result["sell_side"] = [{"price": p, "qty": q} for p, q in sell_10]
                     if sell_10:
                         total_qty = sum(q for _, q in sell_10)
                         result["sell_side_avg"] = round(total_qty / len(sell_10), 1)
 
-                    # --- Buy side depth: 10 highest DISTINCT price levels with qty ---
-                    buy_counts = {}
-                    for p in buy_prices:
-                        buy_counts[p] = buy_counts.get(p, 0) + 1
-                    buy_sorted = sorted(buy_counts.items(), reverse=True)  # descending
-                    buy_10 = buy_sorted[:10]
-                    buy_10.reverse()  # show ascending in output
+                    # Buy side = 10 lowest distinct price levels (buy orders / sell-now fills)
+                    buy_10_asc = all_sorted[-10:] if len(all_sorted) > 10 else all_sorted
+                    buy_10 = list(reversed(buy_10_asc))  # most expensive first
                     result["buy_side"] = [{"price": p, "qty": q} for p, q in buy_10]
                     if buy_10:
                         total_qty = sum(q for _, q in buy_10)
