@@ -48,21 +48,25 @@ def scan_market(params):
             break
 
         for listing in listings:
-            buy_now = listing.get("best_sell_price")
-            sell_now = listing.get("best_buy_price")
+            # best_buy_price = highest buy order = what you place a buy order near (cheap)
+            # best_sell_price = lowest sell order = what you place a sell order near (expensive)
+            buy_order_price = listing.get("best_buy_price")   # you buy at this (low)
+            sell_order_price = listing.get("best_sell_price")  # you sell at this (high)
 
-            if not isinstance(buy_now, (int, float)) or not isinstance(sell_now, (int, float)):
+            if not isinstance(buy_order_price, (int, float)) or not isinstance(sell_order_price, (int, float)):
                 continue
-            if buy_now <= 0 or sell_now <= 0:
+            if buy_order_price <= 0 or sell_order_price <= 0:
                 continue
 
-            revenue = int(sell_now * (1 - TAX_RATE))
-            profit = revenue - int(buy_now)
+            # profit = sell high after tax - buy low
+            revenue = int(sell_order_price * (1 - TAX_RATE))
+            cost = int(buy_order_price)
+            profit = revenue - cost
 
             if profit < min_profit:
                 continue
 
-            roi = (profit / buy_now) * 100
+            roi = (profit / cost) * 100
             if roi < min_roi:
                 continue
 
@@ -75,8 +79,8 @@ def scan_market(params):
                 "team": item.get("team_short_name", ""),
                 "position": item.get("display_position", ""),
                 "series": item.get("series", ""),
-                "buy_price": int(buy_now),
-                "sell_price": int(sell_now),
+                "buy_price": cost,
+                "sell_price": int(sell_order_price),
                 "profit": profit,
                 "roi": round(roi, 1),
                 "img": item.get("baked_img") or item.get("img", ""),
