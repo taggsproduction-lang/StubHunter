@@ -6,6 +6,7 @@ from datetime import datetime
 from http.server import BaseHTTPRequestHandler
 
 BASE_URL = "https://mlb26.theshow.com/apis"
+TAX_RATE = 0.10
 
 
 class handler(BaseHTTPRequestHandler):
@@ -14,7 +15,16 @@ class handler(BaseHTTPRequestHandler):
         query = parse_qs(urlparse(self.path).query)
         uuid = query.get("uuid", [None])[0]
 
-        result = {"sales_per_hour": None, "depth_avg": None, "depth_detail": []}
+        result = {
+            "sales_per_hour": None,
+            "sell_side": [],      # lowest 10 transaction prices (approximates sell now depth)
+            "buy_side": [],       # highest 10 transaction prices (approximates buy now depth)
+            "sell_side_avg": None,
+            "buy_side_avg": None,
+            "best_buy_price": None,
+            "best_sell_price": None,
+            "opportunity": None,
+        }
 
         if uuid:
             try:
@@ -22,51 +32,120 @@ class handler(BaseHTTPRequestHandler):
                 resp.raise_for_status()
                 data = resp.json()
 
+                best_buy = data.get("best_buy_price")    # sell now price
+                best_sell = data.get("best_sell_price")   # buy now price
+                if isinstance(best_buy, (int, float)):
+                    result["best_buy_price"] = int(best_buy)
+                if isinstance(best_sell, (int, float)):
+                    result["best_sell_price"] = int(best_sell)
+
                 orders = data.get("completed_orders", [])
 
-                # --- Sales velocity ---
-                if len(orders) >= 2:
-                    fmt = "%m/%d/%Y %H:%M:%S"
-                    times = []
-                    for o in orders:
-                        try:
-                            times.append(datetime.strptime(o["date"], fmt))
-                        except (ValueError, KeyError):
-                            continue
-
-                    if len(times) >= 2:
-                        times.sort()
-                        span = (times[-1] - times[0]).total_seconds() / 3600
-                        if span > 0:
-                            result["sales_per_hour"] = round(len(times) / span, 1)
-
-                # --- Market depth: analyze lowest 10 prices from completed orders ---
-                # Parse all completed order prices and find clustering at low end
-                prices = []
+                # --- Parse all order prices + times ---
+                parsed = []
+                fmt = "%m/%d/%Y %H:%M:%S"
                 for o in orders:
                     try:
                         p = int(o["price"].replace(",", ""))
-                        prices.append(p)
+                        t = datetime.strptime(o["date"], fmt)
+                        parsed.append({"price": p, "time": t})
                     except (ValueError, KeyError):
                         continue
 
-                if prices:
-                    # Sort ascending, take lowest 10
-                    prices.sort()
-                    lowest_10 = prices[:10]
+                # --- Sales velocity ---
+                if len(parsed) >= 2:
+                    times = sorted([x["time"] for x in parsed])
+                    span = (times[-1] - times[0]).total_seconds() / 3600
+                    if span > 0:
+                        result["sales_per_hour"] = round(len(times) / span, 1)
 
-                    # Count qty at each distinct price
-                    price_counts = {}
-                    for p in lowest_10:
-                        price_counts[p] = price_counts.get(p, 0) + 1
+                if parsed:
+                    prices = sorted([x["price"] for x in parsed])
 
-                    # Build detail: [{price, qty}] sorted by price
-                    detail = [{"price": p, "qty": q} for p, q in sorted(price_counts.items())]
-                    result["depth_detail"] = detail
+                    # Find the midpoint to split sell-side vs buy-side
+                    # Transactions near the low end = sell now fills
+                    # Transactions near the high end = buy now fills
+                    if best_buy and best_sell and best_buy > 0 and best_sell > 0:
+                        midpoint = (best_buy + best_sell) / 2
+                    else:
+                        midpoint = (prices[0] + prices[-1]) / 2
 
-                    # Average qty per distinct price across the lowest 10
-                    num_distinct = len(price_counts)
-                    result["depth_avg"] = round(len(lowest_10) / num_distinct, 1) if num_distinct > 0 else None
+                    sell_prices = [p for p in prices if p <= midpoint]
+                    buy_prices = [p for p in prices if p > midpoint]
+
+                    # If split is too lopsided, just take bottom/top halves
+                    if not sell_prices or not buy_prices:
+                        half = len(prices) // 2
+                        sell_prices = prices[:half] if half > 0 else prices[:1]
+                        buy_prices = prices[half:] if half < len(prices) else prices[-1:]
+
+                    # --- Sell side depth: lowest 10 transactions ---
+                    sell_10 = sell_prices[:10]
+                    sell_counts = {}
+                    for p in sell_10:
+                        sell_counts[p] = sell_counts.get(p, 0) + 1
+                    result["sell_side"] = [{"price": p, "qty": q} for p, q in sorted(sell_counts.items())]
+                    if sell_counts:
+                        result["sell_side_avg"] = round(len(sell_10) / len(sell_counts), 1)
+
+                    # --- Buy side depth: highest 10 transactions ---
+                    buy_10 = buy_prices[-10:]
+                    buy_counts = {}
+                    for p in buy_10:
+                        buy_counts[p] = buy_counts.get(p, 0) + 1
+                    result["buy_side"] = [{"price": p, "qty": q} for p, q in sorted(buy_counts.items())]
+                    if buy_counts:
+                        result["buy_side_avg"] = round(len(buy_10) / len(buy_counts), 1)
+
+                    # --- Opportunity analysis ---
+                    # Look at recent transactions sorted by time (newest first)
+                    # Find thin spots: few sales in a profitable ROI band
+                    by_time = sorted(parsed, key=lambda x: x["time"], reverse=True)
+                    recent = by_time[:25]  # last 25 transactions
+
+                    if best_buy and best_sell and best_buy > 0 and best_sell > 0:
+                        # For each recent transaction, calculate what ROI you'd get
+                        # if you bought at that price and sold at best_sell
+                        opportunities = []
+                        for tx in recent:
+                            cost = tx["price"] + 1
+                            revenue = int((best_sell - 1) * (1 - TAX_RATE))
+                            profit = revenue - cost
+                            if cost > 0:
+                                roi = round((profit / cost) * 100, 1)
+                            else:
+                                continue
+
+                            if 15 <= roi <= 85 and profit > 0:
+                                opportunities.append({
+                                    "price": tx["price"],
+                                    "roi": roi,
+                                    "profit": profit,
+                                    "time": tx["time"].strftime("%H:%M"),
+                                })
+
+                        if opportunities:
+                            # Count how many recent transactions fall in this sweet spot
+                            count = len(opportunities)
+                            avg_price = round(sum(o["price"] for o in opportunities) / count)
+                            avg_roi = round(sum(o["roi"] for o in opportunities) / count, 1)
+                            avg_profit = round(sum(o["profit"] for o in opportunities) / count)
+
+                            if count <= 5:
+                                tip = f"Only {count} recent sales in the 15-85% ROI zone. Thin market — get in at ~{avg_price + 1:,} stubs to undercut."
+                            elif count <= 10:
+                                tip = f"{count} sales in the sweet spot. Moderate competition at ~{avg_price:,} stubs."
+                            else:
+                                tip = f"{count} sales competing in this range. Crowded — consider a different card."
+
+                            result["opportunity"] = {
+                                "count": count,
+                                "avg_price": avg_price,
+                                "avg_roi": avg_roi,
+                                "avg_profit": avg_profit,
+                                "tip": tip,
+                                "transactions": opportunities[:5],
+                            }
 
             except Exception:
                 pass
