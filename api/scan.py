@@ -3,10 +3,21 @@
 import json
 import time
 import requests
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from http.server import BaseHTTPRequestHandler
 
 BASE_URL = "https://mlb26.theshow.com/apis"
 TAX_RATE = 0.10
+
+
+def fetch_page(api_params):
+    """Fetch a single page of listings."""
+    try:
+        resp = requests.get(f"{BASE_URL}/listings.json", params=api_params, timeout=10)
+        resp.raise_for_status()
+        return resp.json()
+    except Exception:
+        return None
 
 
 def scan_market(params):
@@ -16,91 +27,88 @@ def scan_market(params):
     min_buy = int(params.get("min_buy_price", 0))
     rarity = params.get("rarity") or None
     series_id = params.get("series_id") or None
-    pages = min(int(params.get("pages", 20)), 60)
 
+    # Build base API params (without page)
+    base_params = {
+        "type": "mlb_card",
+        "sort": "best_sell_price",
+        "order": "asc",
+    }
+    if rarity:
+        base_params["rarity"] = rarity
+    if series_id and series_id != "-1":
+        base_params["series_id"] = series_id
+    if min_buy > 0:
+        base_params["min_best_sell_price"] = min_buy
+    if max_buy > 0:
+        base_params["max_best_sell_price"] = max_buy
+
+    # First request to get total_pages
+    first_params = {**base_params, "page": 1}
+    first_data = fetch_page(first_params)
+    if not first_data:
+        return []
+
+    total_pages = first_data.get("total_pages", 1)
+    all_listings = first_data.get("listings", [])
+
+    # Fetch remaining pages in parallel (up to 5 at a time)
+    if total_pages > 1:
+        remaining = list(range(2, total_pages + 1))
+        with ThreadPoolExecutor(max_workers=5) as pool:
+            futures = {
+                pool.submit(fetch_page, {**base_params, "page": p}): p
+                for p in remaining
+            }
+            for future in as_completed(futures):
+                data = future.result()
+                if data and data.get("listings"):
+                    all_listings.extend(data["listings"])
+
+    # Process all listings
     flips = []
+    for listing in all_listings:
+        sell_now = listing.get("best_buy_price")   # you buy here (place order at +1)
+        buy_now = listing.get("best_sell_price")    # you sell here (list at -1)
 
-    for page in range(1, pages + 1):
-        api_params = {
-            "type": "mlb_card",
-            "page": page,
-            "sort": "best_sell_price",
-            "order": "asc",
-        }
-        if rarity:
-            api_params["rarity"] = rarity
-        if series_id and series_id != "-1":
-            api_params["series_id"] = series_id
-        if min_buy > 0:
-            api_params["min_best_sell_price"] = min_buy
-        if max_buy > 0:
-            api_params["max_best_sell_price"] = max_buy
+        if not isinstance(sell_now, (int, float)) or not isinstance(buy_now, (int, float)):
+            continue
+        if sell_now <= 0 or buy_now <= 0:
+            continue
 
-        try:
-            resp = requests.get(f"{BASE_URL}/listings.json", params=api_params, timeout=10)
-            resp.raise_for_status()
-            data = resp.json()
-        except Exception:
-            break
+        your_buy = int(sell_now) + 1
+        your_sell = int(buy_now) - 1
 
-        listings = data.get("listings", [])
-        if not listings:
-            break
+        revenue = int(your_sell * (1 - TAX_RATE))
+        profit = revenue - your_buy
 
-        for listing in listings:
-            # In The Show marketplace:
-            # best_buy_price = "Sell Now" price (highest buy order on the board)
-            # best_sell_price = "Buy Now" price (lowest sell order on the board)
-            #
-            # Flip strategy:
-            # 1. Place buy order at Sell Now + 1 to acquire card cheap
-            # 2. List sell order at Buy Now - 1 to sell card high
-            sell_now = listing.get("best_buy_price")   # you buy here (place order at +1)
-            buy_now = listing.get("best_sell_price")    # you sell here (list at -1)
+        if profit < min_profit:
+            continue
 
-            if not isinstance(sell_now, (int, float)) or not isinstance(buy_now, (int, float)):
-                continue
-            if sell_now <= 0 or buy_now <= 0:
-                continue
+        if your_buy <= 0:
+            continue
 
-            # actual prices you'd use
-            your_buy = int(sell_now) + 1       # outbid current best buy order
-            your_sell = int(buy_now) - 1       # undercut current best sell order
+        roi = (profit / your_buy) * 100
+        if roi < min_roi:
+            continue
 
-            # profit after 10% tax
-            revenue = int(your_sell * (1 - TAX_RATE))
-            profit = revenue - your_buy
-
-            if profit < min_profit:
-                continue
-
-            if your_buy > 0:
-                roi = (profit / your_buy) * 100
-            else:
-                continue
-
-            if roi < min_roi:
-                continue
-
-            item = listing.get("item", {})
-            flips.append({
-                "name": listing.get("listing_name", "Unknown"),
-                "uuid": item.get("uuid", ""),
-                "rarity": item.get("rarity", "Unknown"),
-                "ovr": item.get("ovr", 0),
-                "team": item.get("team_short_name", ""),
-                "position": item.get("display_position", ""),
-                "series": item.get("series", ""),
-                "sell_now": int(sell_now),
-                "buy_now": int(buy_now),
-                "your_buy": your_buy,
-                "your_sell": your_sell,
-                "profit": profit,
-                "roi": round(roi, 1),
-                "img": item.get("baked_img") or item.get("img", ""),
-            })
-
-        time.sleep(0.2)
+        item = listing.get("item", {})
+        flips.append({
+            "name": listing.get("listing_name", "Unknown"),
+            "uuid": item.get("uuid", ""),
+            "rarity": item.get("rarity", "Unknown"),
+            "ovr": item.get("ovr", 0),
+            "team": item.get("team_short_name", ""),
+            "position": item.get("display_position", ""),
+            "series": item.get("series", ""),
+            "sell_now": int(sell_now),
+            "buy_now": int(buy_now),
+            "your_buy": your_buy,
+            "your_sell": your_sell,
+            "profit": profit,
+            "roi": round(roi, 1),
+            "img": item.get("baked_img") or item.get("img", ""),
+        })
 
     flips.sort(key=lambda f: f["profit"], reverse=True)
     return flips

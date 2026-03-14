@@ -465,14 +465,6 @@
                 </div>
             </div>
             <div class="filter-group">
-                <label>Pages</label>
-                <div class="slider-wrap">
-                    <input type="range" id="pages" min="5" max="60" step="5" value="20"
-                           oninput="document.getElementById('pagesVal').textContent=this.value">
-                    <span class="slider-val" id="pagesVal">20</span>
-                </div>
-            </div>
-            <div class="filter-group">
                 <label>Rarity</label>
                 <select id="rarity">
                     <option value="">All Rarities</option>
@@ -628,7 +620,6 @@
                 max_buy_price: document.getElementById('maxBuy').value,
                 rarity: document.getElementById('rarity').value,
                 series_id: document.getElementById('seriesSelect').value,
-                pages: document.getElementById('pages').value,
             }).toString();
         }
 
