@@ -435,15 +435,15 @@
             <div class="filter-group">
                 <label>Min Profit</label>
                 <div class="slider-wrap">
-                    <input type="range" id="minProfit" min="0" max="5000" step="50" value="200"
-                           oninput="document.getElementById('minProfitVal').textContent=Number(this.value).toLocaleString()">
-                    <span class="slider-val" id="minProfitVal">200</span>
+                    <input type="range" id="minProfit" min="0" max="10000" step="50" value="0"
+                           oninput="document.getElementById('minProfitVal').textContent=this.value==0?'Any':Number(this.value).toLocaleString()">
+                    <span class="slider-val" id="minProfitVal">Any</span>
                 </div>
             </div>
             <div class="filter-group">
                 <label>Min ROI %</label>
                 <div class="slider-wrap">
-                    <input type="range" id="minRoi" min="0" max="100" step="1" value="10"
+                    <input type="range" id="minRoi" min="0" max="200" step="1" value="10"
                            oninput="document.getElementById('minRoiVal').textContent=this.value+'%'">
                     <span class="slider-val" id="minRoiVal">10%</span>
                 </div>
@@ -451,25 +451,25 @@
             <div class="filter-group">
                 <label>Min Buy</label>
                 <div class="slider-wrap">
-                    <input type="range" id="minBuy" min="0" max="10000" step="50" value="100"
-                           oninput="document.getElementById('minBuyVal').textContent=Number(this.value).toLocaleString()">
-                    <span class="slider-val" id="minBuyVal">100</span>
+                    <input type="range" id="minBuy" min="0" max="50000" step="100" value="0"
+                           oninput="document.getElementById('minBuyVal').textContent=this.value==0?'Any':Number(this.value).toLocaleString()">
+                    <span class="slider-val" id="minBuyVal">Any</span>
                 </div>
             </div>
             <div class="filter-group">
                 <label>Max Buy</label>
                 <div class="slider-wrap">
-                    <input type="range" id="maxBuy" min="1000" max="500000" step="1000" value="50000"
-                           oninput="document.getElementById('maxBuyVal').textContent=Number(this.value).toLocaleString()">
-                    <span class="slider-val" id="maxBuyVal">50,000</span>
+                    <input type="range" id="maxBuy" min="0" max="1000000" step="5000" value="0"
+                           oninput="document.getElementById('maxBuyVal').textContent=this.value==0?'No Limit':Number(this.value).toLocaleString()">
+                    <span class="slider-val" id="maxBuyVal">No Limit</span>
                 </div>
             </div>
             <div class="filter-group">
                 <label>Pages</label>
                 <div class="slider-wrap">
-                    <input type="range" id="pages" min="1" max="40" step="1" value="10"
+                    <input type="range" id="pages" min="5" max="60" step="5" value="20"
                            oninput="document.getElementById('pagesVal').textContent=this.value">
-                    <span class="slider-val" id="pagesVal">10</span>
+                    <span class="slider-val" id="pagesVal">20</span>
                 </div>
             </div>
             <div class="filter-group">

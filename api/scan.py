@@ -10,13 +10,13 @@ TAX_RATE = 0.10
 
 
 def scan_market(params):
-    min_profit = int(params.get("min_profit", 100))
+    min_profit = int(params.get("min_profit", 0))
     min_roi = float(params.get("min_roi", 5.0))
-    max_buy = int(params.get("max_buy_price", 50000))
-    min_buy = int(params.get("min_buy_price", 100))
+    max_buy = int(params.get("max_buy_price", 0))   # 0 = no limit
+    min_buy = int(params.get("min_buy_price", 0))
     rarity = params.get("rarity") or None
     series_id = params.get("series_id") or None
-    pages = min(int(params.get("pages", 10)), 40)
+    pages = min(int(params.get("pages", 20)), 60)
 
     flips = []
 
@@ -31,9 +31,9 @@ def scan_market(params):
             api_params["rarity"] = rarity
         if series_id and series_id != "-1":
             api_params["series_id"] = series_id
-        if min_buy:
+        if min_buy > 0:
             api_params["min_best_sell_price"] = min_buy
-        if max_buy:
+        if max_buy > 0:
             api_params["max_best_sell_price"] = max_buy
 
         try:
@@ -74,7 +74,11 @@ def scan_market(params):
             if profit < min_profit:
                 continue
 
-            roi = (profit / your_buy) * 100
+            if your_buy > 0:
+                roi = (profit / your_buy) * 100
+            else:
+                continue
+
             if roi < min_roi:
                 continue
 
@@ -96,7 +100,7 @@ def scan_market(params):
                 "img": item.get("baked_img") or item.get("img", ""),
             })
 
-        time.sleep(0.25)
+        time.sleep(0.2)
 
     flips.sort(key=lambda f: f["profit"], reverse=True)
     return flips
