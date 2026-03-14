@@ -41,7 +41,7 @@
             overflow-x: hidden;
         }
 
-        /* ===== HEADER / HERO ===== */
+        /* ===== HEADER ===== */
         .header {
             position: relative;
             background: linear-gradient(135deg, #0d1525 0%, #162038 50%, #1a1230 100%);
@@ -52,454 +52,280 @@
         .header::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -10%;
-            width: 120%;
-            height: 200%;
-            background: radial-gradient(ellipse at 30% 50%, rgba(212, 168, 67, 0.06) 0%, transparent 60%),
-                        radial-gradient(ellipse at 70% 30%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+            top: -50%; left: -10%; width: 120%; height: 200%;
+            background: radial-gradient(ellipse at 30% 50%, rgba(212,168,67,0.06) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 30%, rgba(59,130,246,0.05) 0%, transparent 50%);
             pointer-events: none;
         }
 
-        /* Baseball stitching accent */
         .stitch-line {
-            position: absolute;
-            top: 0;
-            right: 40px;
-            width: 3px;
-            height: 100%;
-            background: repeating-linear-gradient(
-                180deg,
-                transparent 0px,
-                transparent 6px,
-                #c43e3e 6px,
-                #c43e3e 12px,
-                transparent 12px,
-                transparent 18px
-            );
+            position: absolute; top: 0; right: 40px; width: 3px; height: 100%;
+            background: repeating-linear-gradient(180deg, transparent 0px, transparent 6px, #c43e3e 6px, #c43e3e 12px, transparent 12px, transparent 18px);
             opacity: 0.25;
         }
-
-        .stitch-line:nth-child(2) {
-            right: 52px;
-        }
+        .stitch-line:nth-child(2) { right: 52px; }
 
         .header-content {
-            position: relative;
-            padding: 28px 40px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            z-index: 1;
+            position: relative; padding: 28px 40px;
+            display: flex; align-items: center; justify-content: space-between; z-index: 1;
         }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .logo-icon {
-            width: 52px;
-            height: 52px;
-            position: relative;
-        }
-
-        /* Baseball diamond SVG shape */
-        .diamond-shape {
-            width: 52px;
-            height: 52px;
-        }
+        .brand { display: flex; align-items: center; gap: 16px; }
+        .logo-icon { width: 52px; height: 52px; }
+        .diamond-shape { width: 52px; height: 52px; }
 
         .brand-text h1 {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 36px;
-            letter-spacing: 3px;
-            color: #fff;
-            line-height: 1;
+            font-family: 'Bebas Neue', sans-serif; font-size: 36px;
+            letter-spacing: 3px; color: #fff; line-height: 1;
         }
-
         .brand-text h1 .gold { color: var(--accent-gold); }
-
         .brand-text .subtitle {
-            font-family: 'Oswald', sans-serif;
-            font-size: 12px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--text-dim);
-            margin-top: 2px;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
+            font-family: 'Oswald', sans-serif; font-size: 12px;
+            letter-spacing: 4px; text-transform: uppercase; color: var(--text-dim); margin-top: 2px;
         }
 
         .status-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            font-size: 13px;
-            color: var(--text-dim);
+            display: flex; align-items: center; gap: 8px; padding: 8px 16px;
+            background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+            border-radius: 20px; font-size: 13px; color: var(--text-dim);
         }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--accent-teal);
-        }
-
-        .status-dot.scanning {
-            background: var(--stubs-yellow);
-            animation: pulse 1.2s infinite;
-        }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-teal); }
+        .status-dot.scanning { background: var(--stubs-yellow); animation: pulse 1.2s infinite; }
 
         /* ===== FILTER BAR ===== */
         .filter-bar {
-            background: var(--bg-panel);
-            border-bottom: 1px solid var(--border);
-            padding: 18px 40px;
+            background: var(--bg-panel); border-bottom: 1px solid var(--border); padding: 20px 40px;
         }
 
         .filter-row {
-            display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
-            align-items: end;
+            display: flex; gap: 18px; flex-wrap: wrap; align-items: end;
         }
 
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
+        .filter-group { display: flex; flex-direction: column; gap: 6px; }
 
         .filter-group label {
-            font-family: 'Oswald', sans-serif;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-muted);
+            font-family: 'Oswald', sans-serif; font-size: 10px;
+            text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted);
         }
 
-        .filter-group input,
         .filter-group select {
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 9px 14px;
-            border-radius: 6px;
-            font-family: 'Inter', sans-serif;
-            font-size: 13px;
-            width: 145px;
-            transition: border-color 0.2s;
+            background: var(--bg-input); border: 1px solid var(--border); color: var(--text);
+            padding: 9px 14px; border-radius: 6px; font-family: 'Inter', sans-serif;
+            font-size: 13px; width: 165px; transition: border-color 0.2s;
+        }
+        .filter-group select:focus { outline: none; border-color: var(--accent-gold); }
+
+        /* Slider styles */
+        .slider-wrap {
+            display: flex; align-items: center; gap: 10px; min-width: 180px;
         }
 
-        .filter-group select { width: 165px; }
+        .slider-wrap input[type="range"] {
+            -webkit-appearance: none; appearance: none;
+            width: 120px; height: 6px;
+            background: var(--border);
+            border-radius: 3px; outline: none; cursor: pointer;
+        }
 
-        .filter-group input:focus,
-        .filter-group select:focus {
-            outline: none;
-            border-color: var(--accent-gold);
+        .slider-wrap input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 16px; height: 16px; border-radius: 50%;
+            background: var(--accent-gold);
+            border: 2px solid var(--bg-dark);
+            box-shadow: 0 0 6px rgba(212,168,67,0.4);
+            cursor: pointer;
+        }
+
+        .slider-wrap input[type="range"]::-moz-range-thumb {
+            width: 16px; height: 16px; border-radius: 50%;
+            background: var(--accent-gold); border: 2px solid var(--bg-dark);
+            box-shadow: 0 0 6px rgba(212,168,67,0.4); cursor: pointer;
+        }
+
+        .slider-val {
+            font-family: 'Bebas Neue', sans-serif; font-size: 18px;
+            color: var(--stubs-yellow); min-width: 50px; text-align: right;
+            letter-spacing: 0.5px;
         }
 
         .btn {
-            font-family: 'Oswald', sans-serif;
-            padding: 9px 28px;
-            border: none;
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.2s;
+            font-family: 'Oswald', sans-serif; padding: 9px 28px; border: none;
+            border-radius: 6px; font-size: 15px; font-weight: 600;
+            letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s;
         }
-
         .btn-primary {
             background: linear-gradient(135deg, var(--accent-gold) 0%, #b8912e 100%);
-            color: #0b0f1a;
-            box-shadow: 0 2px 12px rgba(212, 168, 67, 0.25);
+            color: #0b0f1a; box-shadow: 0 2px 12px rgba(212,168,67,0.25);
         }
-
         .btn-primary:hover {
             background: linear-gradient(135deg, #e0b84d 0%, var(--accent-gold) 100%);
-            box-shadow: 0 4px 20px rgba(212, 168, 67, 0.4);
+            box-shadow: 0 4px 20px rgba(212,168,67,0.4);
         }
+        .btn-primary:disabled { background: var(--accent-gold-dim); box-shadow: none; cursor: not-allowed; }
 
-        .btn-primary:disabled {
-            background: var(--accent-gold-dim);
-            box-shadow: none;
-            cursor: not-allowed;
-        }
+        .btn-auto { background: transparent; border: 1px solid var(--accent-gold); color: var(--accent-gold); }
+        .btn-auto:hover { background: rgba(212,168,67,0.1); }
+        .btn-auto.active { background: var(--accent-gold); color: #0b0f1a; }
 
-        .btn-auto {
-            background: transparent;
-            border: 1px solid var(--accent-gold);
-            color: var(--accent-gold);
-        }
-
-        .btn-auto:hover { background: rgba(212, 168, 67, 0.1); }
-
-        .btn-auto.active {
-            background: var(--accent-gold);
-            color: #0b0f1a;
-        }
-
-        /* ===== SCOREBOARD STATS ===== */
+        /* ===== SCOREBOARD ===== */
         .scoreboard {
-            display: flex;
-            gap: 0;
-            margin: 20px 40px 0;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-            background: var(--bg-panel);
+            display: flex; gap: 0; margin: 20px 40px 0;
+            border: 1px solid var(--border); border-radius: 8px;
+            overflow: hidden; background: var(--bg-panel);
         }
-
         .score-cell {
-            flex: 1;
-            padding: 16px 20px;
-            text-align: center;
+            flex: 1; padding: 16px 20px; text-align: center;
             border-right: 1px solid var(--border);
-            position: relative;
         }
-
         .score-cell:last-child { border-right: none; }
-
         .score-cell .label {
-            font-family: 'Oswald', sans-serif;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
+            font-family: 'Oswald', sans-serif; font-size: 10px;
+            text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 6px;
         }
-
         .score-cell .value {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 28px;
-            color: #fff;
-            letter-spacing: 1px;
+            font-family: 'Bebas Neue', sans-serif; font-size: 28px;
+            color: #fff; letter-spacing: 1px;
         }
-
         .score-cell .value.stubs { color: var(--stubs-yellow); }
         .score-cell .value.profit { color: var(--profit-green); }
 
-        /* ===== RESULTS TABLE ===== */
-        .table-wrapper {
-            padding: 20px 40px 40px;
-        }
-
+        /* ===== TABLE ===== */
+        .table-wrapper { padding: 20px 40px 40px; }
         .table-container {
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-            background: var(--bg-panel);
+            border: 1px solid var(--border); border-radius: 8px;
+            overflow: hidden; background: var(--bg-panel);
         }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            background: linear-gradient(180deg, #1a2540 0%, #151d33 100%);
-        }
-
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: linear-gradient(180deg, #1a2540 0%, #151d33 100%); }
         th {
-            text-align: left;
-            padding: 14px 18px;
-            font-family: 'Oswald', sans-serif;
-            font-size: 11px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-muted);
+            text-align: left; padding: 14px 16px;
+            font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 500;
+            text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted);
             border-bottom: 2px solid var(--accent-gold-dim);
-            cursor: pointer;
-            user-select: none;
-            white-space: nowrap;
-            transition: color 0.2s;
+            cursor: pointer; user-select: none; white-space: nowrap; transition: color 0.2s;
         }
-
         th:hover { color: var(--accent-gold); }
         th.sorted { color: var(--accent-gold); }
-
         td {
-            padding: 12px 18px;
-            border-bottom: 1px solid rgba(42, 53, 80, 0.5);
-            font-size: 14px;
-            white-space: nowrap;
+            padding: 12px 16px; border-bottom: 1px solid rgba(42,53,80,0.5);
+            font-size: 14px; white-space: nowrap;
         }
+        tr:hover td { background: rgba(212,168,67,0.03); }
 
-        tr:hover td {
-            background: rgba(212, 168, 67, 0.03);
-        }
-
-        .card-info {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
+        .card-info { display: flex; align-items: center; gap: 14px; }
         .card-img-wrap {
-            width: 54px;
-            height: 54px;
-            border-radius: 6px;
-            overflow: hidden;
-            background: var(--bg-dark);
-            border: 1px solid var(--border);
-            flex-shrink: 0;
+            width: 54px; height: 54px; border-radius: 6px; overflow: hidden;
+            background: var(--bg-dark); border: 1px solid var(--border); flex-shrink: 0;
         }
+        .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+        .card-name { font-weight: 600; color: #fff; font-size: 14px; }
+        .card-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
-        .card-img-wrap img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .card-name {
-            font-weight: 600;
-            color: #fff;
-            font-size: 14px;
-        }
-
-        .card-meta {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
-        /* Rarity badges */
         .rarity-pill {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 4px;
-            font-family: 'Oswald', sans-serif;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            display: inline-block; padding: 3px 10px; border-radius: 4px;
+            font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 500;
+            letter-spacing: 1px; text-transform: uppercase;
         }
+        .rarity-diamond { background: rgba(0,191,255,0.12); color: var(--diamond); border: 1px solid rgba(0,191,255,0.25); }
+        .rarity-gold { background: rgba(255,215,0,0.1); color: var(--gold); border: 1px solid rgba(255,215,0,0.2); }
+        .rarity-silver { background: rgba(176,184,200,0.1); color: var(--silver); border: 1px solid rgba(176,184,200,0.15); }
+        .rarity-bronze { background: rgba(205,127,50,0.1); color: var(--bronze); border: 1px solid rgba(205,127,50,0.2); }
+        .rarity-common { background: rgba(107,114,128,0.1); color: var(--common); border: 1px solid rgba(107,114,128,0.15); }
 
-        .rarity-diamond { background: rgba(0, 191, 255, 0.12); color: var(--diamond); border: 1px solid rgba(0, 191, 255, 0.25); }
-        .rarity-gold { background: rgba(255, 215, 0, 0.1); color: var(--gold); border: 1px solid rgba(255, 215, 0, 0.2); }
-        .rarity-silver { background: rgba(176, 184, 200, 0.1); color: var(--silver); border: 1px solid rgba(176, 184, 200, 0.15); }
-        .rarity-bronze { background: rgba(205, 127, 50, 0.1); color: var(--bronze); border: 1px solid rgba(205, 127, 50, 0.2); }
-        .rarity-common { background: rgba(107, 114, 128, 0.1); color: var(--common); border: 1px solid rgba(107, 114, 128, 0.15); }
-
-        .ovr-badge {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 20px;
-            color: #fff;
-            letter-spacing: 1px;
-        }
-
-        .price { font-weight: 600; color: var(--stubs-yellow); font-family: 'Inter', sans-serif; }
-
-        .profit-cell {
-            font-weight: 700;
-            color: var(--profit-green);
-            font-family: 'Inter', sans-serif;
-        }
-
+        .ovr-badge { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: #fff; letter-spacing: 1px; }
+        .price { font-weight: 600; color: var(--stubs-yellow); }
+        .profit-cell { font-weight: 700; color: var(--profit-green); }
         .roi-high { color: var(--profit-green); font-weight: 600; }
         .roi-medium { color: var(--stubs-yellow); font-weight: 600; }
         .roi-low { color: var(--text-dim); }
 
-        .velocity-btn {
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            padding: 5px 12px;
-            border-radius: 4px;
-            font-family: 'Oswald', sans-serif;
-            font-size: 11px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.2s;
+        .action-btn {
+            background: var(--bg-input); border: 1px solid var(--border); color: var(--text-muted);
+            padding: 5px 10px; border-radius: 4px; font-family: 'Oswald', sans-serif;
+            font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase;
+            cursor: pointer; transition: all 0.2s;
         }
+        .action-btn:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
 
-        .velocity-btn:hover {
-            border-color: var(--accent-gold);
-            color: var(--accent-gold);
+        /* Depth tooltip */
+        .depth-info {
+            font-size: 11px; line-height: 1.6;
         }
+        .depth-row {
+            display: flex; justify-content: space-between; gap: 12px;
+            padding: 2px 0; border-bottom: 1px solid rgba(42,53,80,0.3);
+        }
+        .depth-row:last-child { border-bottom: none; }
+        .depth-price { color: var(--stubs-yellow); }
+        .depth-qty { color: var(--text); font-weight: 600; }
+        .depth-warning { color: var(--accent-red); }
+        .depth-ok { color: var(--profit-green); }
+
+        /* Popup overlay for depth detail */
+        .popup-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: center;
+        }
+        .popup-overlay.active { display: flex; }
+        .popup {
+            background: var(--bg-panel); border: 1px solid var(--accent-gold-dim);
+            border-radius: 10px; padding: 24px; min-width: 320px; max-width: 400px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+        }
+        .popup h3 {
+            font-family: 'Oswald', sans-serif; font-size: 16px; text-transform: uppercase;
+            letter-spacing: 1px; color: var(--accent-gold); margin-bottom: 4px;
+        }
+        .popup .popup-sub {
+            font-size: 12px; color: var(--text-muted); margin-bottom: 16px;
+        }
+        .popup .depth-avg-line {
+            margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border);
+            font-family: 'Oswald', sans-serif; font-size: 13px; letter-spacing: 1px;
+            text-transform: uppercase; color: var(--text-dim);
+        }
+        .popup .depth-avg-line strong {
+            font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 1px;
+        }
+        .popup-close {
+            margin-top: 16px; width: 100%; padding: 8px;
+            font-family: 'Oswald', sans-serif; font-size: 13px; text-transform: uppercase;
+            letter-spacing: 1px; background: var(--bg-input); border: 1px solid var(--border);
+            color: var(--text-dim); border-radius: 6px; cursor: pointer;
+        }
+        .popup-close:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
 
         /* ===== EMPTY STATE ===== */
-        .empty-state {
-            text-align: center;
-            padding: 100px 40px;
-        }
-
+        .empty-state { text-align: center; padding: 100px 40px; }
         .empty-diamond {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 24px;
-            transform: rotate(45deg);
-            border: 2px solid var(--accent-gold-dim);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 4px;
+            width: 80px; height: 80px; margin: 0 auto 24px; transform: rotate(45deg);
+            border: 2px solid var(--accent-gold-dim); display: flex;
+            align-items: center; justify-content: center; border-radius: 4px;
         }
-
         .empty-diamond-inner {
-            transform: rotate(-45deg);
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 28px;
-            color: var(--accent-gold-dim);
-            letter-spacing: 1px;
+            transform: rotate(-45deg); font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px; color: var(--accent-gold-dim); letter-spacing: 1px;
         }
-
         .empty-state h2 {
-            font-family: 'Oswald', sans-serif;
-            font-size: 22px;
-            font-weight: 500;
-            color: #fff;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 8px;
+            font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 500;
+            color: #fff; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;
         }
-
         .empty-state p {
-            color: var(--text-muted);
-            font-size: 14px;
-            max-width: 420px;
-            margin: 0 auto;
-            line-height: 1.5;
+            color: var(--text-muted); font-size: 14px; max-width: 420px;
+            margin: 0 auto; line-height: 1.5;
         }
 
-        /* ===== ANIMATIONS ===== */
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.3s ease; }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 900px) {
             .header-content { padding: 20px; }
             .filter-bar { padding: 14px 20px; }
             .scoreboard { margin: 16px 20px 0; }
             .table-wrapper { padding: 16px 20px 20px; }
             .brand-text h1 { font-size: 26px; }
-            .filter-group input, .filter-group select { width: 120px; }
         }
-
         @media (max-width: 640px) {
             .scoreboard { flex-wrap: wrap; }
             .score-cell { min-width: 50%; }
@@ -508,7 +334,7 @@
 </head>
 <body>
 
-    <!-- ===== HEADER ===== -->
+    <!-- HEADER -->
     <div class="header">
         <div class="stitch-line"></div>
         <div class="stitch-line"></div>
@@ -536,24 +362,48 @@
         </div>
     </div>
 
-    <!-- ===== FILTERS ===== -->
+    <!-- FILTERS -->
     <div class="filter-bar">
         <div class="filter-row">
             <div class="filter-group">
                 <label>Min Profit</label>
-                <input type="number" id="minProfit" value="200" min="0">
+                <div class="slider-wrap">
+                    <input type="range" id="minProfit" min="0" max="5000" step="50" value="200"
+                           oninput="document.getElementById('minProfitVal').textContent=Number(this.value).toLocaleString()">
+                    <span class="slider-val" id="minProfitVal">200</span>
+                </div>
             </div>
             <div class="filter-group">
                 <label>Min ROI %</label>
-                <input type="number" id="minRoi" value="10" min="0" step="1">
+                <div class="slider-wrap">
+                    <input type="range" id="minRoi" min="0" max="100" step="1" value="10"
+                           oninput="document.getElementById('minRoiVal').textContent=this.value+'%'">
+                    <span class="slider-val" id="minRoiVal">10%</span>
+                </div>
             </div>
             <div class="filter-group">
                 <label>Min Buy</label>
-                <input type="number" id="minBuy" value="100" min="0">
+                <div class="slider-wrap">
+                    <input type="range" id="minBuy" min="0" max="10000" step="50" value="100"
+                           oninput="document.getElementById('minBuyVal').textContent=Number(this.value).toLocaleString()">
+                    <span class="slider-val" id="minBuyVal">100</span>
+                </div>
             </div>
             <div class="filter-group">
                 <label>Max Buy</label>
-                <input type="number" id="maxBuy" value="50000" min="0">
+                <div class="slider-wrap">
+                    <input type="range" id="maxBuy" min="1000" max="500000" step="1000" value="50000"
+                           oninput="document.getElementById('maxBuyVal').textContent=Number(this.value).toLocaleString()">
+                    <span class="slider-val" id="maxBuyVal">50,000</span>
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Pages</label>
+                <div class="slider-wrap">
+                    <input type="range" id="pages" min="1" max="40" step="1" value="10"
+                           oninput="document.getElementById('pagesVal').textContent=this.value">
+                    <span class="slider-val" id="pagesVal">10</span>
+                </div>
             </div>
             <div class="filter-group">
                 <label>Rarity</label>
@@ -572,16 +422,12 @@
                     <option value="">All Series</option>
                 </select>
             </div>
-            <div class="filter-group">
-                <label>Pages</label>
-                <input type="number" id="pages" value="10" min="1" max="40">
-            </div>
             <button class="btn btn-primary" id="scanBtn" onclick="triggerScan()">Scan Market</button>
             <button class="btn btn-auto" id="autoBtn" onclick="toggleAuto()">Auto 60s</button>
         </div>
     </div>
 
-    <!-- ===== SCOREBOARD ===== -->
+    <!-- SCOREBOARD -->
     <div class="scoreboard" id="scoreboard" style="display:none;">
         <div class="score-cell">
             <div class="label">Flips Found</div>
@@ -605,12 +451,10 @@
         </div>
     </div>
 
-    <!-- ===== TABLE ===== -->
+    <!-- TABLE -->
     <div class="table-wrapper">
         <div id="emptyState" class="empty-state">
-            <div class="empty-diamond">
-                <div class="empty-diamond-inner">26</div>
-            </div>
+            <div class="empty-diamond"><div class="empty-diamond-inner">26</div></div>
             <h2>Hit "Scan Market" to find flips</h2>
             <p>The scanner pulls live data from the MLB The Show 26 marketplace and finds the most profitable buy-low-sell-high opportunities after the 10% tax.</p>
         </div>
@@ -630,10 +474,22 @@
                         <th onclick="sortBy('profit')" class="sorted">Profit <span class="arrow" data-col="profit">&#9660;</span></th>
                         <th onclick="sortBy('roi')">ROI <span class="arrow" data-col="roi"></span></th>
                         <th>Speed</th>
+                        <th>Depth</th>
                     </tr>
                 </thead>
                 <tbody id="tbody"></tbody>
             </table>
+        </div>
+    </div>
+
+    <!-- DEPTH POPUP -->
+    <div class="popup-overlay" id="depthPopup" onclick="if(event.target===this)closeDepth()">
+        <div class="popup">
+            <h3 id="depthCardName">Card Name</h3>
+            <div class="popup-sub">Lowest 10 completed order prices &mdash; qty per price point</div>
+            <div class="depth-info" id="depthBody"></div>
+            <div class="depth-avg-line" id="depthAvgLine"></div>
+            <button class="popup-close" onclick="closeDepth()">Close</button>
         </div>
     </div>
 
@@ -644,7 +500,7 @@
         let autoInterval = null;
         let scanning = false;
 
-        // Load series on page load
+        // Load series
         (async function loadSeries() {
             try {
                 const resp = await fetch('/api/series');
@@ -657,9 +513,7 @@
                     opt.textContent = s.name;
                     sel.appendChild(opt);
                 });
-            } catch (e) {
-                console.warn('Could not load series:', e);
-            }
+            } catch (e) { console.warn('Could not load series:', e); }
         })();
 
         function getFilters() {
@@ -677,15 +531,11 @@
         async function triggerScan() {
             if (scanning) return;
             scanning = true;
-
             const btn = document.getElementById('scanBtn');
             const dot = document.getElementById('statusDot');
             const txt = document.getElementById('statusText');
-
-            btn.disabled = true;
-            btn.textContent = 'SCANNING...';
-            dot.classList.add('scanning');
-            txt.textContent = 'Scanning marketplace...';
+            btn.disabled = true; btn.textContent = 'SCANNING...';
+            dot.classList.add('scanning'); txt.textContent = 'Scanning marketplace...';
 
             try {
                 const resp = await fetch('/api/scan?' + getFilters());
@@ -693,39 +543,26 @@
                 flips = data.flips || [];
                 renderTable();
                 updateScoreboard();
-            } catch (e) {
-                console.error('Scan failed:', e);
-                txt.textContent = 'Scan failed';
-            }
+            } catch (e) { console.error('Scan failed:', e); txt.textContent = 'Scan failed'; }
 
-            btn.disabled = false;
-            btn.textContent = 'SCAN MARKET';
+            btn.disabled = false; btn.textContent = 'SCAN MARKET';
             dot.classList.remove('scanning');
-            txt.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            txt.textContent = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit', second:'2-digit' });
             scanning = false;
         }
 
         function sortBy(field) {
-            if (sortField === field) {
-                sortDir = sortDir === 'desc' ? 'asc' : 'desc';
-            } else {
-                sortField = field;
-                sortDir = 'desc';
-            }
-            renderTable();
-            updateSortArrows();
+            if (sortField === field) { sortDir = sortDir === 'desc' ? 'asc' : 'desc'; }
+            else { sortField = field; sortDir = 'desc'; }
+            renderTable(); updateSortArrows();
         }
 
         function updateSortArrows() {
             document.querySelectorAll('.arrow').forEach(el => {
-                el.textContent = '';
-                el.closest('th').classList.remove('sorted');
+                el.textContent = ''; el.closest('th').classList.remove('sorted');
             });
             const active = document.querySelector(`.arrow[data-col="${sortField}"]`);
-            if (active) {
-                active.textContent = sortDir === 'desc' ? '\u25BC' : '\u25B2';
-                active.closest('th').classList.add('sorted');
-            }
+            if (active) { active.textContent = sortDir === 'desc' ? '\u25BC' : '\u25B2'; active.closest('th').classList.add('sorted'); }
         }
 
         function renderTable() {
@@ -735,11 +572,9 @@
                 return sortDir === 'asc' ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
             });
 
-            const tbody = document.getElementById('tbody');
-            tbody.innerHTML = sorted.map(f => {
+            document.getElementById('tbody').innerHTML = sorted.map(f => {
                 const rc = f.rarity.toLowerCase();
                 const roiClass = f.roi >= 30 ? 'roi-high' : f.roi >= 15 ? 'roi-medium' : 'roi-low';
-
                 return `<tr class="fade-in">
                     <td>
                         <div class="card-info">
@@ -761,7 +596,8 @@
                     <td class="price">${f.your_sell.toLocaleString()}</td>
                     <td class="profit-cell">+${f.profit.toLocaleString()}</td>
                     <td class="${roiClass}">${f.roi}%</td>
-                    <td><button class="velocity-btn" onclick="checkVelocity(this,'${f.uuid}')">CHECK</button></td>
+                    <td><button class="action-btn" onclick="checkVelocity(this,'${f.uuid}')">CHECK</button></td>
+                    <td><button class="action-btn" onclick="checkDepth('${f.uuid}','${f.name.replace(/'/g, "\\'")}')">DEPTH</button></td>
                 </tr>`;
             }).join('');
 
@@ -774,18 +610,15 @@
             if (!flips.length) return;
             document.getElementById('scoreboard').style.display = 'flex';
             document.getElementById('statCount').textContent = flips.length;
-            const best = Math.max(...flips.map(f => f.profit));
-            document.getElementById('statBest').textContent = best.toLocaleString();
+            document.getElementById('statBest').textContent = Math.max(...flips.map(f => f.profit)).toLocaleString();
             const avg = Math.round(flips.reduce((s, f) => s + f.profit, 0) / flips.length);
             document.getElementById('statAvg').textContent = avg.toLocaleString();
-            const total = flips.reduce((s, f) => s + f.profit, 0);
-            document.getElementById('statTotal').textContent = total.toLocaleString();
-            document.getElementById('statTime').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('statTotal').textContent = flips.reduce((s, f) => s + f.profit, 0).toLocaleString();
+            document.getElementById('statTime').textContent = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
         }
 
         async function checkVelocity(btn, uuid) {
-            btn.textContent = '...';
-            btn.disabled = true;
+            btn.textContent = '...'; btn.disabled = true;
             try {
                 const resp = await fetch(`/api/velocity?uuid=${uuid}`);
                 const data = await resp.json();
@@ -793,27 +626,56 @@
                     btn.textContent = `${data.sales_per_hour}/hr`;
                     btn.style.color = data.sales_per_hour >= 10 ? 'var(--profit-green)' : data.sales_per_hour >= 3 ? 'var(--stubs-yellow)' : 'var(--accent-red)';
                     btn.style.borderColor = btn.style.color;
-                } else {
-                    btn.textContent = 'N/A';
-                }
-            } catch {
-                btn.textContent = 'ERR';
-            }
+                } else { btn.textContent = 'N/A'; }
+            } catch { btn.textContent = 'ERR'; }
             btn.disabled = false;
         }
+
+        async function checkDepth(uuid, name) {
+            document.getElementById('depthCardName').textContent = name;
+            document.getElementById('depthBody').innerHTML = '<div style="color:var(--text-muted)">Loading...</div>';
+            document.getElementById('depthAvgLine').innerHTML = '';
+            document.getElementById('depthPopup').classList.add('active');
+
+            try {
+                const resp = await fetch(`/api/velocity?uuid=${uuid}`);
+                const data = await resp.json();
+
+                if (data.depth_detail && data.depth_detail.length > 0) {
+                    let html = data.depth_detail.map(d => {
+                        const qtyClass = d.qty >= 3 ? 'depth-warning' : 'depth-ok';
+                        return `<div class="depth-row">
+                            <span class="depth-price">${d.price.toLocaleString()} stubs</span>
+                            <span class="${qtyClass}">${d.qty}x</span>
+                        </div>`;
+                    }).join('');
+                    document.getElementById('depthBody').innerHTML = html;
+
+                    const avg = data.depth_avg;
+                    const avgClass = avg >= 3 ? 'depth-warning' : 'depth-ok';
+                    document.getElementById('depthAvgLine').innerHTML =
+                        `Avg qty per price point: <strong class="${avgClass}">${avg}</strong>` +
+                        (avg >= 3 ? '<br><span class="depth-warning" style="font-size:11px;">High concentration — someone may be hoarding</span>' :
+                         '<br><span class="depth-ok" style="font-size:11px;">Market looks clean</span>');
+                } else {
+                    document.getElementById('depthBody').innerHTML = '<div style="color:var(--text-muted)">No completed order data available</div>';
+                }
+            } catch {
+                document.getElementById('depthBody').innerHTML = '<div style="color:var(--accent-red)">Failed to load depth data</div>';
+            }
+        }
+
+        function closeDepth() { document.getElementById('depthPopup').classList.remove('active'); }
 
         function toggleAuto() {
             const btn = document.getElementById('autoBtn');
             if (autoInterval) {
-                clearInterval(autoInterval);
-                autoInterval = null;
-                btn.classList.remove('active');
-                btn.textContent = 'AUTO 60S';
+                clearInterval(autoInterval); autoInterval = null;
+                btn.classList.remove('active'); btn.textContent = 'AUTO 60S';
             } else {
                 triggerScan();
                 autoInterval = setInterval(triggerScan, 60000);
-                btn.classList.add('active');
-                btn.textContent = 'AUTO ON';
+                btn.classList.add('active'); btn.textContent = 'AUTO ON';
             }
         }
     </script>
