@@ -550,27 +550,27 @@
     <div class="popup-overlay" id="depthPopup" onclick="if(event.target===this)closeDepth()">
         <div class="popup" style="max-width:460px;">
             <h3 id="depthCardName">Card Name</h3>
-            <div class="popup-sub">Recent transaction depth &mdash; sell side vs buy side</div>
+            <div class="popup-sub">Based on recent completed orders</div>
 
-            <!-- Two-column depth -->
+            <!-- Two-column depth matching companion app layout -->
             <div style="display:flex;gap:12px;margin-bottom:12px;">
                 <div style="flex:1;">
-                    <div style="font-family:'Oswald',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:8px;">
-                        Sell Side (Low 10)
+                    <div style="display:flex;justify-content:space-between;font-family:'Oswald',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:6px;">
+                        <span>Qty</span><span>Buy Price</span>
                     </div>
-                    <div class="depth-info" id="depthSell"></div>
+                    <div class="depth-info" id="depthBuy"></div>
                     <div style="margin-top:8px;font-size:11px;color:var(--text-muted);">
-                        Avg/price: <strong id="sellAvg" style="color:var(--text);">-</strong>
+                        Avg qty/level: <strong id="buyAvg" style="color:var(--text);">-</strong>
                     </div>
                 </div>
                 <div style="width:1px;background:var(--border);"></div>
                 <div style="flex:1;">
-                    <div style="font-family:'Oswald',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:8px;">
-                        Buy Side (High 10)
+                    <div style="display:flex;justify-content:space-between;font-family:'Oswald',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:6px;">
+                        <span>Qty</span><span>Sell Price</span>
                     </div>
-                    <div class="depth-info" id="depthBuy"></div>
+                    <div class="depth-info" id="depthSell"></div>
                     <div style="margin-top:8px;font-size:11px;color:var(--text-muted);">
-                        Avg/price: <strong id="buyAvg" style="color:var(--text);">-</strong>
+                        Avg qty/level: <strong id="sellAvg" style="color:var(--text);">-</strong>
                     </div>
                 </div>
             </div>
@@ -740,29 +740,13 @@
                 const resp = await fetch(`/api/velocity?uuid=${uuid}`);
                 const data = await resp.json();
 
-                // Sell side depth
-                if (data.sell_side && data.sell_side.length > 0) {
-                    document.getElementById('depthSell').innerHTML = data.sell_side.map(d => {
-                        const cls = d.qty >= 3 ? 'depth-warning' : 'depth-ok';
-                        return `<div class="depth-row">
-                            <span class="depth-price">${d.price.toLocaleString()}</span>
-                            <span class="${cls}">${d.qty}x</span>
-                        </div>`;
-                    }).join('');
-                    const sa = data.sell_side_avg;
-                    document.getElementById('sellAvg').textContent = sa;
-                    document.getElementById('sellAvg').className = sa >= 3 ? 'depth-warning' : 'depth-ok';
-                } else {
-                    document.getElementById('depthSell').innerHTML = '<div style="color:var(--text-muted)">No data</div>';
-                }
-
-                // Buy side depth
+                // Buy Price column (left) - highest 10 prices ascending
                 if (data.buy_side && data.buy_side.length > 0) {
                     document.getElementById('depthBuy').innerHTML = data.buy_side.map(d => {
                         const cls = d.qty >= 3 ? 'depth-warning' : 'depth-ok';
                         return `<div class="depth-row">
+                            <span class="${cls}">${d.qty}</span>
                             <span class="depth-price">${d.price.toLocaleString()}</span>
-                            <span class="${cls}">${d.qty}x</span>
                         </div>`;
                     }).join('');
                     const ba = data.buy_side_avg;
@@ -770,6 +754,22 @@
                     document.getElementById('buyAvg').className = ba >= 3 ? 'depth-warning' : 'depth-ok';
                 } else {
                     document.getElementById('depthBuy').innerHTML = '<div style="color:var(--text-muted)">No data</div>';
+                }
+
+                // Sell Price column (right) - lowest 10 prices descending
+                if (data.sell_side && data.sell_side.length > 0) {
+                    document.getElementById('depthSell').innerHTML = data.sell_side.map(d => {
+                        const cls = d.qty >= 3 ? 'depth-warning' : 'depth-ok';
+                        return `<div class="depth-row">
+                            <span class="${cls}">${d.qty}</span>
+                            <span class="depth-price">${d.price.toLocaleString()}</span>
+                        </div>`;
+                    }).join('');
+                    const sa = data.sell_side_avg;
+                    document.getElementById('sellAvg').textContent = sa;
+                    document.getElementById('sellAvg').className = sa >= 3 ? 'depth-warning' : 'depth-ok';
+                } else {
+                    document.getElementById('depthSell').innerHTML = '<div style="color:var(--text-muted)">No data</div>';
                 }
 
                 // Opportunity analysis

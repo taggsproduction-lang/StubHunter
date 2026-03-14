@@ -65,23 +65,26 @@ class handler(BaseHTTPRequestHandler):
                     for x in parsed:
                         all_counts[x["price"]] = all_counts.get(x["price"], 0) + 1
 
-                    # Sort all distinct prices descending (most expensive first)
-                    all_sorted = sorted(all_counts.items(), reverse=True)
+                    all_asc = sorted(all_counts.items())   # cheapest first
+                    all_desc = sorted(all_counts.items(), reverse=True)  # most expensive first
 
-                    # Sell side = 10 highest distinct price levels (sell orders / buy-now fills)
-                    sell_10 = all_sorted[:10]
-                    result["sell_side"] = [{"price": p, "qty": q} for p, q in sell_10]
-                    if sell_10:
-                        total_qty = sum(q for _, q in sell_10)
-                        result["sell_side_avg"] = round(total_qty / len(sell_10), 1)
-
-                    # Buy side = 10 lowest distinct price levels (buy orders / sell-now fills)
-                    buy_10_asc = all_sorted[-10:] if len(all_sorted) > 10 else all_sorted
-                    buy_10 = list(reversed(buy_10_asc))  # most expensive first
+                    # Buy Price (left column): 10 highest prices, sorted ascending
+                    # These approximate the sell orders (what you'd pay to buy)
+                    buy_10 = all_desc[:10]
+                    buy_10.sort()  # ascending like the screenshot
                     result["buy_side"] = [{"price": p, "qty": q} for p, q in buy_10]
                     if buy_10:
                         total_qty = sum(q for _, q in buy_10)
                         result["buy_side_avg"] = round(total_qty / len(buy_10), 1)
+
+                    # Sell Price (right column): 10 lowest prices, sorted descending
+                    # These approximate the buy orders (what you'd get if you sell)
+                    sell_10 = all_asc[:10]
+                    sell_10.sort(reverse=True)  # descending like the screenshot
+                    result["sell_side"] = [{"price": p, "qty": q} for p, q in sell_10]
+                    if sell_10:
+                        total_qty = sum(q for _, q in sell_10)
+                        result["sell_side_avg"] = round(total_qty / len(sell_10), 1)
 
                     # --- Opportunity analysis ---
                     # Look at recent transactions sorted by time (newest first)
