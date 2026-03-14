@@ -623,8 +623,10 @@
                         <th onclick="sortBy('rarity')">Rarity <span class="arrow" data-col="rarity"></span></th>
                         <th onclick="sortBy('ovr')">OVR <span class="arrow" data-col="ovr"></span></th>
                         <th onclick="sortBy('series')">Series <span class="arrow" data-col="series"></span></th>
-                        <th onclick="sortBy('buy_price')">Buy Order <span class="arrow" data-col="buy_price"></span></th>
-                        <th onclick="sortBy('sell_price')">Sell Order <span class="arrow" data-col="sell_price"></span></th>
+                        <th onclick="sortBy('sell_now')">Sell Now <span class="arrow" data-col="sell_now"></span></th>
+                        <th onclick="sortBy('buy_now')">Buy Now <span class="arrow" data-col="buy_now"></span></th>
+                        <th onclick="sortBy('your_buy')">Your Buy <span class="arrow" data-col="your_buy"></span></th>
+                        <th onclick="sortBy('your_sell')">Your Sell <span class="arrow" data-col="your_sell"></span></th>
                         <th onclick="sortBy('profit')" class="sorted">Profit <span class="arrow" data-col="profit">&#9660;</span></th>
                         <th onclick="sortBy('roi')">ROI <span class="arrow" data-col="roi"></span></th>
                         <th>Speed</th>
@@ -753,8 +755,10 @@
                     <td><span class="rarity-pill rarity-${rc}">${f.rarity}</span></td>
                     <td><span class="ovr-badge">${f.ovr}</span></td>
                     <td style="color:var(--text-dim);font-size:12px;">${f.series}</td>
-                    <td class="price">${f.buy_price.toLocaleString()}</td>
-                    <td class="price">${f.sell_price.toLocaleString()}</td>
+                    <td style="color:var(--text-dim)">${f.sell_now.toLocaleString()}</td>
+                    <td style="color:var(--text-dim)">${f.buy_now.toLocaleString()}</td>
+                    <td class="price">${f.your_buy.toLocaleString()}</td>
+                    <td class="price">${f.your_sell.toLocaleString()}</td>
                     <td class="profit-cell">+${f.profit.toLocaleString()}</td>
                     <td class="${roiClass}">${f.roi}%</td>
                     <td><button class="velocity-btn" onclick="checkVelocity(this,'${f.uuid}')">CHECK</button></td>

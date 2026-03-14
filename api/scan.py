@@ -48,25 +48,33 @@ def scan_market(params):
             break
 
         for listing in listings:
-            # best_buy_price = highest buy order = what you place a buy order near (cheap)
-            # best_sell_price = lowest sell order = what you place a sell order near (expensive)
-            buy_order_price = listing.get("best_buy_price")   # you buy at this (low)
-            sell_order_price = listing.get("best_sell_price")  # you sell at this (high)
+            # In The Show marketplace:
+            # best_buy_price = "Sell Now" price (highest buy order on the board)
+            # best_sell_price = "Buy Now" price (lowest sell order on the board)
+            #
+            # Flip strategy:
+            # 1. Place buy order at Sell Now + 1 to acquire card cheap
+            # 2. List sell order at Buy Now - 1 to sell card high
+            sell_now = listing.get("best_buy_price")   # you buy here (place order at +1)
+            buy_now = listing.get("best_sell_price")    # you sell here (list at -1)
 
-            if not isinstance(buy_order_price, (int, float)) or not isinstance(sell_order_price, (int, float)):
+            if not isinstance(sell_now, (int, float)) or not isinstance(buy_now, (int, float)):
                 continue
-            if buy_order_price <= 0 or sell_order_price <= 0:
+            if sell_now <= 0 or buy_now <= 0:
                 continue
 
-            # profit = sell high after tax - buy low
-            revenue = int(sell_order_price * (1 - TAX_RATE))
-            cost = int(buy_order_price)
-            profit = revenue - cost
+            # actual prices you'd use
+            your_buy = int(sell_now) + 1       # outbid current best buy order
+            your_sell = int(buy_now) - 1       # undercut current best sell order
+
+            # profit after 10% tax
+            revenue = int(your_sell * (1 - TAX_RATE))
+            profit = revenue - your_buy
 
             if profit < min_profit:
                 continue
 
-            roi = (profit / cost) * 100
+            roi = (profit / your_buy) * 100
             if roi < min_roi:
                 continue
 
@@ -79,8 +87,10 @@ def scan_market(params):
                 "team": item.get("team_short_name", ""),
                 "position": item.get("display_position", ""),
                 "series": item.get("series", ""),
-                "buy_price": cost,
-                "sell_price": int(sell_order_price),
+                "sell_now": int(sell_now),
+                "buy_now": int(buy_now),
+                "your_buy": your_buy,
+                "your_sell": your_sell,
                 "profit": profit,
                 "roi": round(roi, 1),
                 "img": item.get("baked_img") or item.get("img", ""),
