@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+.venv/
+venv/
+env/
+.vercel
+node_modules/
+.DS_Store
+Thumbs.db
+__pycache__/

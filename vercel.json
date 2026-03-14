@@ -1,0 +1,15 @@
+{
+  "buildCommand": "",
+  "outputDirectory": "public",
+  "rewrites": [
+    { "source": "/api/scan", "destination": "/api/scan" },
+    { "source": "/api/velocity", "destination": "/api/velocity" },
+    { "source": "/api/series", "destination": "/api/series" }
+  ],
+  "functions": {
+    "api/*.py": {
+      "runtime": "@vercel/python@4.5.0",
+      "maxDuration": 60
+    }
+  }
+}
